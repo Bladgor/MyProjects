@@ -25,4 +25,39 @@
 # 3.06
 # 3.34
 
+from random import random
 
+
+class RandomSum:
+    def __init__(self, limit_num):
+        self.prev_num = round(random(), 2)
+        self.count = 0
+        self.limit_num = limit_num
+
+    def __iter__(self):
+        self.prev_num = round(random(), 2)
+        self.count = 0
+        return self
+
+    def __next__(self):
+        self.count += 1
+        if self.count <= self.limit_num:
+            self.cur_num = round(self.prev_num + random(), 2)
+            self.prev_num = self.cur_num
+        else:
+            raise StopIteration
+        return self.cur_num
+
+
+quantity = int(input('Кол-во элементов: '))
+my_elem = RandomSum(quantity)
+for elem in my_elem:
+    print(elem)
+
+quantity = int(input('\nНовое кол-во элементов: '))
+my_elem = RandomSum(quantity)
+for elem in my_elem:
+    print(elem)
+print('\nЗапускаем ещё раз цикл по тому же итератору:')
+for elem in my_elem:
+    print(elem)
