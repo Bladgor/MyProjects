@@ -14,28 +14,37 @@
 # Q(4) = (Q(4-Q(3))+Q(4-Q(2)) = Q(4-2)+Q(4-1) = Q(2)+Q(3) = 1+2=3
 # Q(n)=Q(n−Q(n−1))+Q(n−Q(n−2))
 
-def q_hofstadter(num_list):
-    q_1 = num_list[0]
-    q_2 = num_list[1]
-    if q_1 != 1 or q_2 != 0:
-        return
-    count = 2
-    while count != 0:
-        yield 1
-        count -= 1
-    count = 3
-    while True:
-        q_3 = (count - q_2) + (count - q_1)
-        yield q_3
-        q_1 = q_2
-        q_2 = q_3
-        count += 1
+class QHofstadter:
+    def __init__(self, my_list):
+        self.prev_q = 1
+        self.cur_q = self.set_q(my_list[0])
+        self.next_q = self.set_q(my_list[1])
+        self.count = 0
+
+    def set_q(self, q):
+        if q != 1:
+            raise StopIteration
+        return q
+
+    def __iter__(self):
+        self.count = 0
+        return self
+
+    def __next__(self):
+        self.count += 1
+
+        self.cur_q = (self.count - self.cur_q) + (self.count - self.prev_q)
+        if self.cur_q == 1:
+            return 1
+        return self.cur_q
 
 
-counter = 0
+my_q = QHofstadter([1, 1])
+count = 0
 
-for elem in q_hofstadter([1, 1]):
-    counter += 1
+for elem in my_q:
+    count += 1
     print(elem)
-    if counter == 5:
+    if count == 5:
         break
+
