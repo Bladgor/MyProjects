@@ -41,5 +41,35 @@
 # Удаление второго элемента.
 # Новый список: [10 30]
 # ````
+class Box:
+    def __init__(self, box=None):
+        self.box = box
+        self.next_box = None
 
+
+class LinkedList:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+    def append(self, value):
+        end_value = LinkedList(value)
+        n = self
+        while n.next:
+            n = n.next
+        n.next = end_value
+
+    def __str__(self):
+        my_list = []
+        while self.next:
+            node = self.next
+            my_list.append(node)
+        return str(my_list)
+
+
+num_list = LinkedList(1)
+
+num_list.append(2)
+num_list.append(3)
+print(num_list)
 
