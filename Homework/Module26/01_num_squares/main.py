@@ -15,7 +15,7 @@ class GenSquare:
         self.num = num
 
     def __iter__(self):  # TODO здесь, как понял, возвращается объект итератора,
-        self.count = 0   #  но вот что написать в аннотаци не совсем понял
+        self.count = 0   #  но вот что написать в данном случае в аннотаци не совсем понял
         return self
 
     def __next__(self) -> int:
@@ -26,7 +26,7 @@ class GenSquare:
             raise StopIteration
 
 
-def gen_square(num: int) -> Iterable:  # TODO а здесь не работает, если как в уроке написать Iterable[int]
+def gen_square(num: int) -> Iterable[int]:
     for number in range(1, num + 1):
         yield number ** 2
 

@@ -1,15 +1,44 @@
-list_1 = [2, 5, 7, 10]
-list_2 = [3, 8, 4, 9]
-to_find = 56
+# ## Задача 4. Последовательность Хофштадтера
+# Реализуйте генерацию последовательности Q Хофштадтера (итератором или генератором).
+# Сама последовательность выглядит так:
+#
+# Q(n)=Q(n−Q(n−1))+Q(n−Q(n−2))
+#
+# В итератор (или генератор) передаётся список из двух чисел.
+# Например, QHofstadter([1, 1]) генерирует точную последовательность Хофштадтера.
+# Если передать значения [1, 2], то последовательность должна немедленно завершиться.
 
-can_continue = True
-for x in list_1:
-    for y in list_2:
-        result = x * y
-        print(x, y, result)
-        if result == to_find:
-            print('Found!!!')
-            can_continue = False
-            break
-    if not can_continue:
+# Пример для понимания алгоритма:
+# например надо подставлять значения Q(1) = 1, Q(2)=1 (по условию).
+# Q(3) = Q(3-1)+Q(3-1) = Q(2)+ Q(2) = 2
+# Q(4) = (Q(4-Q(3))+Q(4-Q(2)) = Q(4-2)+Q(4-1) = Q(2)+Q(3) = 1+2=3
+# Q(n)=Q(n−Q(n−1))+Q(n−Q(n−2))
+
+from typing import List
+from collections import Iterable
+
+
+def q_hofstadter(num_list: List[int]) -> Iterable[int]:
+    if num_list[0] != 1 or num_list[1] != 1:
+        return
+    for num in num_list:
+        yield num
+    while True:
+        n = len(num_list)
+        q = num_list[n - num_list[n - 1]] + num_list[n - num_list[n - 2]]
+        yield q
+        num_list.append(q)
+
+
+counter = 0
+
+for elem in q_hofstadter([1, 1]):
+    counter += 1
+    print(elem, end=' ')
+    if counter == 30:
         break
+
+#  TODO А тут pycharm выдаёт предупреждение: DeprecationWarning:
+#   Using or importing the ABCs from 'collections' instead of from 'collections.abc' is deprecated since Python 3.3,
+#   and in 3.10 it will stop working from collections import Iterable
+#   Как же тогда лучше сейчас делать аннотации?

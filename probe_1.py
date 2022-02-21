@@ -17,15 +17,19 @@
 def q_hofstadter(num_list):
     q_1 = num_list[0]
     q_2 = num_list[1]
-    if q_1 != 1 or q_2 != 0:
+    q_3 = 0
+    list_q = [q_1, q_2, q_3]
+    if q_1 != 1 or q_2 != 1:
         return
     count = 2
     while count != 0:
         yield 1
         count -= 1
     count = 3
+    index = 2
     while True:
-        q_3 = (count - q_2) + (count - q_1)
+        list_q = [q_1, q_2, q_3]
+        q_3 = (count - list_q[index - 1]) + (count - list_q[index - 1])
         yield q_3
         q_1 = q_2
         q_2 = q_3
@@ -37,5 +41,5 @@ counter = 0
 for elem in q_hofstadter([1, 1]):
     counter += 1
     print(elem)
-    if counter == 5:
+    if counter == 7:
         break

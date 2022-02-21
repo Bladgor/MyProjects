@@ -8,43 +8,31 @@
 # Например, QHofstadter([1, 1]) генерирует точную последовательность Хофштадтера.
 # Если передать значения [1, 2], то последовательность должна немедленно завершиться.
 
-# Пример для понимания алгоритма:
-# например надо подставлять значения Q(1) = 1, Q(2)=1 (по условию).
-# Q(3) = Q(3-1)+Q(3-1) = Q(2)+ Q(2) = 2
-# Q(4) = (Q(4-Q(3))+Q(4-Q(2)) = Q(4-2)+Q(4-1) = Q(2)+Q(3) = 1+2=3
-# Q(n)=Q(n−Q(n−1))+Q(n−Q(n−2))
-
-class QHofstadter:
-    def __init__(self, my_list):
-        self.prev_q = 1
-        self.cur_q = self.set_q(my_list[0])
-        self.next_q = self.set_q(my_list[1])
-        self.count = 0
-
-    def set_q(self, q):
-        if q != 1:
-            raise StopIteration
-        return q
-
-    def __iter__(self):
-        self.count = 0
-        return self
-
-    def __next__(self):
-        self.count += 1
-
-        self.cur_q = (self.count - self.cur_q) + (self.count - self.prev_q)
-        if self.cur_q == 1:
-            return 1
-        return self.cur_q
+from typing import List
+from collections import Iterable
 
 
-my_q = QHofstadter([1, 1])
-count = 0
+def q_hofstadter(num_list: List[int]) -> Iterable[int]:
+    if num_list[0] != 1 or num_list[1] != 1:
+        return
+    for num in num_list:
+        yield num
+    while True:
+        n = len(num_list)
+        q = num_list[n - num_list[n - 1]] + num_list[n - num_list[n - 2]]
+        yield q
+        num_list.append(q)
 
-for elem in my_q:
-    count += 1
-    print(elem)
-    if count == 5:
+
+counter = 0
+
+for elem in q_hofstadter([1, 1]):
+    counter += 1
+    print(elem, end=' ')
+    if counter == 30:
         break
 
+#  TODO А тут pycharm выдаёт предупреждение: DeprecationWarning:
+#   Using or importing the ABCs from 'collections' instead of from 'collections.abc' is deprecated since Python 3.3,
+#   and in 3.10 it will stop working from collections import Iterable
+#   Как же тогда лучше сейчас делать аннотации?
