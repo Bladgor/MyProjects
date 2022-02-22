@@ -12,7 +12,7 @@ from typing import List
 from collections import Iterable
 
 
-def q_hofstadter(num_list: List[int]) -> Iterable[int]:
+def q_hofstadter(num_list: List[int]):  # TODO здесь как в первой задаче проблема с  -> Iterable[int]
     if num_list[0] != 1 or num_list[1] != 1:
         return
     for num in num_list:
@@ -32,7 +32,7 @@ for elem in q_hofstadter([1, 1]):
     if counter == 30:
         break
 
-#  TODO А тут pycharm выдаёт предупреждение: DeprecationWarning:
+#  TODO Ещё тут pycharm выдаёт предупреждение: DeprecationWarning:
 #   Using or importing the ABCs from 'collections' instead of from 'collections.abc' is deprecated since Python 3.3,
 #   and in 3.10 it will stop working from collections import Iterable
 #   Как же тогда лучше сейчас делать аннотации?

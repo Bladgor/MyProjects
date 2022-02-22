@@ -26,7 +26,7 @@ class GenSquare:
             raise StopIteration
 
 
-def gen_square(num: int) -> Iterable[int]:
+def gen_square(num: int):  # TODO Здесь дома на python 3.9 работает с  -> Iterable[int], а на работе нет
     for number in range(1, num + 1):
         yield number ** 2
 

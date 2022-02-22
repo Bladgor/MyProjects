@@ -7,6 +7,7 @@ import os
 
 
 def gen_files_path(path: str = os.path.abspath(os.sep), file_search: str = None) -> str:
+    print(path)
     for dirs, folder, files in os.walk(path):
         print('\nВыбранный каталог: ', dirs)
         print('Вложенные папки: ', folder)
@@ -19,8 +20,8 @@ def gen_files_path(path: str = os.path.abspath(os.sep), file_search: str = None)
                     return
 
 
-my_path = os.path.abspath(os.path.join('..', '..'))
+my_path = os.path.abspath(os.path.join('..', '..', 'Module26'))
 my_file = 'my_file.txt'
 
-for elem in gen_files_path(my_path, my_file):
+for elem in gen_files_path(path=my_path, file_search=my_file):
     print(elem)

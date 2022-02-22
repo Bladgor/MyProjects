@@ -41,35 +41,91 @@
 # Удаление второго элемента.
 # Новый список: [10 30]
 # ````
-class Box:
-    def __init__(self, box=None):
-        self.box = box
-        self.next_box = None
+# TODO Моя беда с аннотациями продолжается. Прошу советов по исполнению.
+
+from typing import Optional, Any
 
 
-class LinkedList:
-    def __init__(self, data):
+class Node:
+    def __init__(self, data: Any) -> None:
         self.data = data
         self.next = None
 
-    def append(self, value):
-        end_value = LinkedList(value)
-        n = self
-        while n.next:
-            n = n.next
-        n.next = end_value
 
-    def __str__(self):
-        my_list = []
-        while self.next:
-            node = self.next
-            my_list.append(node)
-        return str(my_list)
+class LinkedList:
+    def __init__(self) -> None:
+        self.head = None
+        self.index = -1
+
+    def append(self, value: Any) -> None:
+        if self.head is None:
+            self.head = Node(value)
+            return
+        last = self.head
+        while last.next:
+            last = last.next
+        last.next = Node(value)
+
+    def get(self, search_index: int) -> Optional[Any]:
+        last = self.head
+        data_index = 0
+        while search_index != data_index:
+            if last.next is None and search_index != data_index:
+                return None
+            data_index += 1
+            last = last.next
+        return last.data
+
+    def remove(self, remove_index: int) -> None:
+        prev = self.head
+        current = self.head
+        data_index = 0
+        while remove_index != data_index:
+            if current.next is None and remove_index != data_index:
+                print('Такого индекса нет')
+                return
+            data_index += 1
+            prev = current
+            current = current.next
+        prev.next = current.next
+
+    def __iter__(self):
+        self.index = -1
+        return self
+
+    def __next__(self) -> Optional[Any]:
+        self.index += 1
+        if self.get(self.index) is not None:
+            return self.get(self.index)
+        else:
+            raise StopIteration
+
+    def __str__(self) -> str:
+        if self.head is None:
+            return '[]'
+        text = '['
+        last = self.head
+        while last.next:
+            if text.endswith('['):
+                text += f'{last.data}'
+            else:
+                text += f' {last.data}'
+            last = last.next
+        text += f' {last.data}]'
+        return text
 
 
-num_list = LinkedList(1)
+my_list = LinkedList()
+print(my_list)
 
-num_list.append(2)
-num_list.append(3)
-print(num_list)
+my_list.append(10)
+my_list.append(20)
+my_list.append(30)
+my_list.append('abc')
 
+print('Текущий список:', my_list)
+print('Получение третьего элемента:', my_list.get(2))
+print('Удаление второго элемента.')
+my_list.remove(1)
+print('Новый список:', my_list)
+my_list.remove(5)
