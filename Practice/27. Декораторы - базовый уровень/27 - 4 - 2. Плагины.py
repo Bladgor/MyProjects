@@ -6,10 +6,10 @@
 # который будет «регистрировать» нужные функции как плагины и заносить их в соответствующий словарь.
 
 import functools
-from typing import Callable
+from typing import Callable, Dict
 
 
-PLUGINS = dict()
+PLUGINS: Dict[str, Callable] = dict()
 
 
 def register(func: Callable) -> Callable:
@@ -55,5 +55,5 @@ def sandwich():
 
 print(PLUGINS)
 sandwich()
-print(sandwich.__name__)
-print(sandwich.__doc__)
+print('\nНазвание функции:', sandwich.__name__)
+print('Документация:', sandwich.__doc__)
