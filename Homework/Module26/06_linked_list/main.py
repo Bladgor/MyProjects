@@ -80,6 +80,10 @@ class LinkedList:
         prev = self.head
         current = self.head
         data_index = 0
+        if self.head is not None:
+            if remove_index == 0:
+                self.head = self.head.next
+                return
         while remove_index != data_index:
             if current.next is None and remove_index != data_index:
                 print('Такого индекса нет')
@@ -125,6 +129,9 @@ my_list.append('abc')
 
 print('Текущий список:', my_list)
 print('Получение третьего элемента:', my_list.get(2))
+print('Удаление первого элемента.')
+my_list.remove(0)
+print('Новый список:', my_list)
 print('Удаление второго элемента.')
 my_list.remove(1)
 print('Новый список:', my_list)
