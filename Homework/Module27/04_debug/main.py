@@ -33,5 +33,49 @@
 # 'greeting' вернула значение 'Ого, Катя! Тебе уже 16 лет, ты быстро растешь!'
 # Ого, Катя! Тебе уже 16 лет, ты быстро растешь!
 
+import functools
+from typing import Callable, Any
 
 
+def debug(func: Callable) -> Callable:
+    """
+    Декоратор. Выводит имя функции со всеми передаваемыми параметрами.
+    После выводит возвращаемое значение и результат выполнения.
+
+    :param func: Any
+    :return: Callable
+    """
+    @functools.wraps(func)
+    def wrapped_func(*args, **kwargs) -> Any:
+        arguments = []
+        if args and kwargs:
+            for elem in args:
+                arguments.append(f"'{elem}'")
+            for elem in kwargs:
+                arguments.append(f'{elem}={kwargs[elem]}')
+        elif args:
+            for elem in args:
+                arguments.append(f"'{elem}'")
+        else:
+            for elem in kwargs:
+                arguments.append(f'{elem}={kwargs[elem]}')
+        arguments = ', '.join(arguments)
+        print(f'\nВызывается {func.__name__}({arguments})')
+        result = func(*args, **kwargs)
+        print(f"'{func.__name__}' вернула значение '{result}'")
+        print(result)
+        return result
+    return wrapped_func
+
+
+@debug
+def greeting(name: str, age: Any = None) -> str:
+    if age:
+        return "Ого, {name}! Тебе уже {age} лет, ты быстро растешь!".format(name=name, age=age)
+    else:
+        return "Привет, {name}!".format(name=name)
+
+
+greeting("Том")
+greeting("Миша", age=100)
+greeting(name="Катя", age=16)
