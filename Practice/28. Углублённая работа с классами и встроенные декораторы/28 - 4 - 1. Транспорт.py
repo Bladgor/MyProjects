@@ -20,6 +20,7 @@ class Transport(ABC):
     def __init__(self, color, speed=0):
         self.__color = color
         self.__speed = speed
+        self.music = False
 
     def move(self, speed):
         self.__speed = speed
@@ -29,30 +30,32 @@ class Transport(ABC):
         print('Громкий гудок!')
 
 
-class Land:
-    def __init__(self):
+class Car(Transport):
+    def __init__(self, color):
+        super().__init__(color)
         self.movement_surface = 'land'
 
 
-class Water:
-    def __init__(self):
+class Boat(Transport):
+    def __init__(self, color):
+        super().__init__(color)
         self.movement_surface = 'water'
 
 
-class Car(Transport, Land):
-    def __init__(self, color):
-        super().__init__(color)
+class Music:
+    def play_music(self):
+        self.music = True
+        print('Музыка включена')
 
 
-class Boat(Transport, Water):
-    def __init__(self, color):
-        super().__init__(color)
-
-
-class Amphibian(Transport, Water, Land):
-    def __init__(self, color):
-        super().__init__(color)
+class Amphibian(Transport, Music):
+    def __init__(self, color, speed=0):
+        super().__init__(color, speed)
+        self.movement_surface = 'land and water'
 
 
 amphibian = Amphibian('white')
 print(amphibian.movement_surface)
+print(amphibian.__class__.__mro__)
+amphibian.play_music()
+print(amphibian.music)
