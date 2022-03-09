@@ -1,49 +1,11 @@
-# Вы работаете в отделе тестирования,
-# и вам поручили с помощью различных функций замерить скорость передачи данных на нескольких десятках сайтов.
-# Конечно же, вручную «щёлкать» сайты и замерять время вам было лень,
-# поэтому возникла идея написать «автотест», который всё сделает сам.
-#
-# С помощью понятия функции высшего порядка реализуйте функцию-таймер,
-# которая замеряет время работы переданной функции func и выдаёт ответ на экран.
-#
-# Проверьте работу таймера на какой-нибудь «тяжеловесной» функции.
+# печатать числа от 0 до 1000, которые делятся на 3, не делятся на 5, сумма цифр < 10
+for elem in range(1001):
+    if elem % 3 == 0 and elem % 5 != 0:
+        total_num = 0
+        current_num = elem
+        while elem != 0:
+            total_num += elem % 10
+            elem //= 10
+        if total_num < 10:
+            print(current_num)
 
-import time
-
-
-def timer(func):
-    def wrapped_func(*args, **kwargs):
-        start_time = time.time()
-        result_1 = args
-        result_2 = kwargs
-        print(f'args = {result_1}\nkwargs = {result_2}')
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        run_time = end_time - start_time
-        print(f'Функция работала {run_time} секунд(ы).')
-
-        return result
-    return wrapped_func
-
-
-@timer
-def squares_sum():
-    total = 0
-    for x in range(1, 11 * 10 ** 4):
-        total += x ** 2
-    return total
-
-
-@timer
-def cubes_sum(number):
-    total = 0
-    for x in range(number + 1):
-        total += x ** 3
-    return total
-
-
-my_result_1 = squares_sum()
-print(my_result_1)
-print()
-my_result_2 = cubes_sum(900000)
-print(my_result_2)
