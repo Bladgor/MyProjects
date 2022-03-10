@@ -10,18 +10,18 @@ import time
 from typing import Callable, Optional
 
 
-def timer_sleep(_func: Optional[Callable] = None, *, sleep_sec: int = 1):
+def timer_sleep(_func: Optional[Callable] = None, *, sleep_sec: int = 3) -> Callable:
     def timer(func: Callable) -> Callable:
 
         @functools.wraps(func)
         def wrapped_func(*args, **kwargs):
             time.sleep(sleep_sec)
-            result = func(args, kwargs)
+            result = func(*args, **kwargs)
             return result
         return wrapped_func
     if _func is None:
         return timer
-    return timer_sleep(_func)
+    return timer(_func)
 
 
 @timer_sleep

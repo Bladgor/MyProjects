@@ -1,8 +1,14 @@
-def my_print(**kwargs):
-    print(kwargs.get('param_1'))
-    print(kwargs.get('param_2'))
-    print(kwargs)
+cubs = [x ** 3 for x in range(1, 1000, 2)]
+print(cubs)
+total = 0
+for elem in cubs:
+    if sum(map(int, str(elem))) % 7 == 0:
+        total += elem
 
+print(total)
 
-my_print(param_1=123)
-
+# print(len(cubs))
+# # cub = sum(map(int, str(cubs)))
+# # print(cub)
+# # print(str(cubs))
+# print(19 ** 3)
