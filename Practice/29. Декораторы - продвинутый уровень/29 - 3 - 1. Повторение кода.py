@@ -3,12 +3,13 @@
 # который повторяет вызов декорируемой функции два раза.
 # В этот раз реализуйте декоратор repeat, который повторяет задекорированную функцию уже n раз.
 
-from typing import Callable
+from typing import Callable, Optional
 import functools
 
 
-def repeat_count(_func: Callable = None, *, count: int = 2):
-    def repeat(func):
+def repeat_count(_func: Optional[Callable] = None, *, count: int = 1):
+    def repeat(func: Callable) -> Callable:
+
         @functools.wraps(func)
         def wrapped_func(*args, **kwargs):
 
@@ -23,7 +24,7 @@ def repeat_count(_func: Callable = None, *, count: int = 2):
     return repeat(_func)
 
 
-@repeat_count
+@repeat_count(count=3)
 def my_print():
     print('Hello, World!')
 

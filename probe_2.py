@@ -1,5 +1,8 @@
-with open('file.txt', encoding='utf-8') as f,\
-       open('new_file.txt', 'w', encoding='utf-8') as new_f:
-    for i in f:
-        string = i[10:14]
-        new_f.write(f'{string}\n')
+def my_print(**kwargs):
+    print(kwargs.get('param_1'))
+    print(kwargs.get('param_2'))
+    print(kwargs)
+
+
+my_print(param_1=123)
+
