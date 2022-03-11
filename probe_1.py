@@ -4,8 +4,17 @@ from typing import Union, Any
 class Figure:
 
     def __init__(self, **kwargs) -> None:
+        self._side = kwargs.get('side')
         self._height = kwargs.get('height')
         self._base = kwargs.get('base')
+
+    @property
+    def side(self) -> Any:
+        return self._side
+
+    @side.setter
+    def side(self, side: int) -> None:
+        self._height = side
 
     @property
     def height(self) -> Any:
@@ -33,19 +42,19 @@ class Figure:
 class Square(Figure):
 
     def figure_perimeter(self) -> Union[int, float]:
-        return self._base * 4
+        return self.side * 4
 
     def figure_square(self) -> Union[int, float]:
-        return self._base ** 2
+        return self.side ** 2
 
 
 class Triangle(Figure):
 
     def figure_perimeter(self) -> Union[int, float]:
-        return ((self._height ** 2 + (self._base / 2) ** 2) ** 0.5) * 2 + self._base
+        return ((self.height ** 2 + (self.base / 2) ** 2) ** 0.5) * 2 + self.base
 
     def figure_square(self) -> Union[int, float]:
-        return (self._height * self._base) / 2
+        return (self.height * self.base) / 2
 
 
 class Mixin:
@@ -61,20 +70,18 @@ class Cube(Square, Mixin):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.blanks = [Square(base=self.base), Square(base=self.base), Square(base=self.base),
-                       Square(base=self.base), Square(base=self.base), Square(base=self.base)]
+        self.blanks = [Square(**kwargs) for _ in range(6)]
 
 
 class Pyramid(Triangle, Square, Mixin):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.blanks = [Triangle(height=self.height, base=self.base), Triangle(height=self.height, base=self.base),
-                       Triangle(height=self.height, base=self.base), Triangle(height=self.height, base=self.base),
-                       Square(base=self.base)]
+        self.blanks = [Triangle(**kwargs) for _ in range(4)]
+        self.blanks.append(Square(side=self.base))
 
 
-cube = Cube(base=2)
+cube = Cube(side=2)
 print(cube.faces_square())
 print(cube.figure_square())
 print(cube.height)
