@@ -15,6 +15,7 @@ def create_time(cls):
     def wrapper(*args, **kwargs):
         instance = cls(*args, **kwargs)
         print('Время создания инстанса класса по Гринвичу:', datetime.utcnow())
+        print(f'Список всех методов класса:\n{dir(cls)}\n')
         return instance
     return wrapper
 
