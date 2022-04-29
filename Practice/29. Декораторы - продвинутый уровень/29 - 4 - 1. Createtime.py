@@ -45,6 +45,7 @@ def for_all_method(decorator: Callable) -> Callable:
             if i_method_name.startswith('__') is False:
                 current_method = getattr(cls, i_method_name)
                 decorated_method = decorator(current_method)
+                print(decorated_method, current_method)
                 setattr(cls, i_method_name, decorated_method)
         return cls
     return decorate

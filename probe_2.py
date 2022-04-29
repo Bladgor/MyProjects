@@ -1,4 +1,3 @@
-from datetime import datetime
+my_list = [1, 2, 3]
 
-print(datetime.now())
-print(datetime.utcnow())
+print(my_list[2])
