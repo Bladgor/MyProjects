@@ -55,37 +55,39 @@ from datetime import datetime
 from typing import Callable
 
 
-def timer(_func=None, *, format_output: str = 'd m Y - H:M:S', class_name: str = None):
+def timer(_func=None, *, format_output: str = 'd m Y - H:M:S', class_name: str = None) -> Callable:
     def timer_decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # format_output = 'b d Y - H:M:S'
             format_list = format_output.split(' - ')
-            arg_date_1 = format_list[0].split()[0]
-            arg_date_2 = format_list[0].split()[1]
-            arg_date_3 = format_list[0].split()[2]
+
+            arg_date_1, arg_date_2, arg_date_3 = format_list[0].split()[0], \
+                format_list[0].split()[1], format_list[0].split()[2]
             date_text = f'%{arg_date_1} %{arg_date_2} %{arg_date_3}'
-            arg_time_1 = format_list[1].split(':')[0]
-            arg_time_2 = format_list[1].split(':')[1]
-            arg_time_3 = format_list[1].split(':')[2]
+
+            arg_time_1, arg_time_2, arg_time_3 = format_list[1].split(':')[0], \
+                format_list[1].split(':')[1], format_list[1].split(':')[2]
             time_text = f'%{arg_time_1}:%{arg_time_2}:%{arg_time_3}'
-            running_date = datetime.now().strftime(date_text)
-            running_time = datetime.now().strftime(time_text)
+
+            running_date = datetime.utcnow().strftime(date_text)
+            running_time = datetime.utcnow().strftime(time_text)
+            print(f'- Запускается {class_name}.{func.__name__}.'
+                  f'Дата и время запуска: {running_date} - {running_time}')
             start = time.time()
             result = func(*args, **kwargs)
             end = time.time()
-            print(f'Дата запуска функции {class_name}.{func.__name__}:', running_date)
-            print('Время запуска функции:', running_time)
-            print(f'Время работы функции: {round(end - start, 3)}s')
+            print(f'- Завершение {class_name}.{func.__name__}.'
+                  f'Время работы функции: {round(end - start, 3)}s')
             return result
+
         return wrapper
+
     if _func is None:
         return timer_decorator
     return timer_decorator(_func)
 
 
 def log_methods(format_output="d d Y - H:M:S"):
-
     def wrapper(cls):
         for i_method in dir(cls):
             if i_method.startswith('__') is False:
@@ -93,6 +95,7 @@ def log_methods(format_output="d d Y - H:M:S"):
                 decorated_method = timer(cur_method, format_output=format_output, class_name=cls.__name__)
                 setattr(cls, i_method, decorated_method)
         return cls
+
     return wrapper
 
 
