@@ -14,36 +14,36 @@ from time import sleep
 
 class TrafficLight:
     def __init__(self, color):
-        self.__color = color
+        self._color = color.title()
 
     @property
     def color(self):
-        return self.__color
+        return self._color
 
     @color.setter
     def color(self, color: str):
         if color.lower() in ['красный', 'жёлтый', 'зелёный']:
-            self.__color = color.title()
-            print(True)
+            self._color = color.title()
         else:
             raise ValueError('Недопустимое значение цвета')
 
     def running(self):
-        print(self.__color)
-        for _ in range(10):
-            if self.__color == 'Красный':
+        print(self._color)
+        while True:
+            if self._color == 'Красный':
                 sleep(7)
-                self.__color = 'Жёлтый'
-                print(self.__color)
-            elif self.__color == 'Жёлтый':
+                self._color = 'Жёлтый'
+                print(self._color)
+            elif self._color == 'Жёлтый':
                 sleep(2)
-                self.__color = 'Зелёный'
-                print(self.__color)
-            elif self.__color == 'Зелёный':
-                sleep(5)
-                self.__color = 'Красный'
-                print(self.__color)
+                self._color = 'Зелёный'
+                print(self._color)
+            elif self._color == 'Зелёный':
+                sleep(3)
+                self._color = 'Красный'
+                print(self._color)
 
 
 traffic_light = TrafficLight('красный')
+traffic_light.color = 'зелёный'
 traffic_light.running()
