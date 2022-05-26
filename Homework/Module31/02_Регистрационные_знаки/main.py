@@ -22,4 +22,17 @@
 # Решение опирается на использование регулярных выражений и их методов.
 # Переменные, функции и собственные методы классов имеют значащие имена, не a, b, c, d.
 
+import re
+from typing import List
 
+text: str = r'А578ВЕ777 ОР233787 К901МН666 СТ46599 СНИ2929П777 666АМР666'
+use_letter: str = 'АВЕКМНОРСТУХ'
+
+private_car_pattern: str = r'[АВЕКМНОРСТУХ]{1}\d{3}[АВЕКМНОРСТУХ]{2}\d{2,3}'
+taxi_pattern: str = r'[АВЕКМНОРСТУХ]{2}\d{5,6}'
+
+private_car: List[str] = re.findall(private_car_pattern, text)
+print('Список номеров частных автомобилей:', private_car)
+
+taxi: List[str] = re.findall(taxi_pattern, text)
+print('Список номеров такси:', taxi)

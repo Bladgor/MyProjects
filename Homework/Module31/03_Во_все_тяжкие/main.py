@@ -17,4 +17,19 @@
 # Результат вычислений корректен.
 # Переменные, функции и собственные методы классов имеют значащие имена, не a, b, c, d.
 
+import requests
+import json
+
+url = 'https://www.breakingbadapi.com/api/deaths'
+
+my_req = requests.get(url)
+data = json.loads(my_req.text)
+
+# episodes_url = data["episodes"]
+# episodes_req = requests.get(episodes_url)
+# episodes = json.loads(episodes_req.text)
+
+with open('breaking.json', 'w') as file:
+    json.dump(data, file, indent=4)
+
 
