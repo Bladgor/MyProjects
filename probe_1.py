@@ -1,13 +1,16 @@
-import re
-text = r'How much wood would a woodchuck chuck if a woodchuck could chuck wood?'
-result = re.match(r'wo', text)
-print('Поиск шаблона в начале строки:', result)  # 1
-result = re.search(r'wo', text)
-print('Поиск первого найденного совпадения по шаблону:', result)  # 2
-print('Содержимое найденной подстроки:', result.group())  # 3
-print('Начальная позиция:', result.start())  # 4
-print('Конечная позиция:', result.end())  # 5
-result = re.findall(r'wo', text)
-print('Список всех упоминаний шаблона:', result)  # 6
-result = re.sub(r'wo', 'ЗАМЕНА', text)
-print('Текст после замены:', result)
+import telebot
+
+bot = telebot.TeleBot('5562447993:AAHxkSOD7HsgYawjsfb_wSRI-e9li_xhE6s')
+
+
+@bot.message_handler(commands=['start', 'help'])
+def send_welcome(message):
+    bot.send_message(message.from_user.id, 'Привет! Как дела?')
+
+
+@bot.message_handler(func=lambda m: True)
+def echo_all(message):
+    bot.reply_to(message, message.text)
+
+
+bot.polling(interval=1)
