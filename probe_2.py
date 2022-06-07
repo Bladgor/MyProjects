@@ -1,22 +1,31 @@
-
-def handler(_func):
-    def wrapper(func):
-        def sub_wrapper(*args, **kwargs):
-            print(*args)
-            print(**kwargs)
-            return func(*args, **kwargs)
-        return sub_wrapper
-    return wrapper
-
-
-@handler
-def my_func(text):
-    if text.text == 'hello':
-        print(text)
-    else:
-        print(False)
+# Реализовать структуру данных «Товары».
+# Она должна представлять собой список кортежей.
+# Каждый кортеж хранит информацию об отдельном товаре.
+# В кортеже должно быть два элемента — номер товара и словарь с параметрами, то есть характеристиками товара:
+# название, цена, количество, единица измерения.
+# Структуру нужно сформировать программно, запросив все данные у пользователя.
+# Пример готовой структуры:
+#
+# [
+# (1, {“название”: “компьютер”, “цена”: 20000, “количество”: 5, “eд”: “шт.”}),
+# (2, {“название”: “принтер”, “цена”: 6000, “количество”: 2, “eд”: “шт.”}),
+# (3, {“название”: “сканер”, “цена”: 2000, “количество”: 7, “eд”: “шт.”})
+# ]
+#
+# my_func(my_text)
 
 
-my_text = 'hello'
+quantity_title = int(input('Введите количество наименований: '))
+list_of_products = []
 
-my_func(my_text)
+for elem in range(1, quantity_title + 1):
+    title, price, quantity, unit_measure = input(f'Введите через пробел для товара № {elem} '
+                                                 'название, цену, количество и единицу измерения:\n').split()
+    list_of_products.append((elem, {
+        "название": title,
+        "цена": price,
+        "количество": quantity,
+        "ед": unit_measure
+    }))
+
+print(list_of_products)

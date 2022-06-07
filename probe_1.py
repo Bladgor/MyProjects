@@ -10,19 +10,19 @@ def send_welcome(message):
     item_button_bad = types.KeyboardButton('Плохо')
     markup = types.ReplyKeyboardMarkup()
     markup.row(item_button_good, item_button_bad)
-    bot.send_message(message.from_user.id, 'Привет! Как дела?', reply_markup=markup)
+    bot.send_message(message.chat.id, 'Привет! Как дела?', reply_markup=markup)
 
 
 @bot.message_handler(regexp='Хорошо')
 def send_good(message):
-    markup = types.ReplyKeyboardRemove(selective=False)
-    bot.send_message(message.from_user.id, 'Ну и отлично!', reply_markup=markup)
+    markup = types.ReplyKeyboardRemove()
+    bot.send_message(message.chat.id, 'Ну и отлично!', reply_markup=markup)
 
 
 @bot.message_handler(regexp='Плохо')
-def send_good(message):
-    markup = types.ReplyKeyboardRemove(selective=False)
-    bot.send_message(message.from_user.id, 'Плохо, когда плохо(((', reply_markup=markup)
+def send_bad(message):
+    markup = types.ReplyKeyboardRemove()
+    bot.send_message(message.chat.id, 'Плохо, когда плохо(((', reply_markup=markup)
 
 
 @bot.message_handler(func=lambda m: True)
