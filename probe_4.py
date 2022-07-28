@@ -1,25 +1,47 @@
-import requests
-import json
+# В рамках разработки шахматного ИИ стоит новая задача.
+# По заданным вещественным координатам коня
+# и второй точки программа должна определить может ли конь ходить в эту точку.
+# 
+# Используйте как можно меньше конструкций if и логических операторов.
+# Обеспечьте контроль ввода.
 
-my_res_dead = requests.get('https://www.breakingbadapi.com/api/death')
-data_dead = json.loads(my_res_dead.text)
+# Введите местоположение коня:
+# 0.071
+# 0.118
+# Введите местоположение точки на доске:
+# 0.213
+# 0.068
+# Конь в клетке (0, 1). Точка в клетке (2, 0).
+# Да, конь может ходить в эту точку.
 
-my_res_episode = requests.get('https://breakingbadapi.com/api/episodes')
-data_episode = json.loads(my_res_episode.text)
+print('Введите местоположение коня:')
+xHorse = float(input())
+yHorse = float(input())
+while xHorse < 0 or xHorse > 0.8 or yHorse < 0 or yHorse > 0.8:
+    print('Клетки с такой координатой не существует. \nВведите местоположение коня:')
+    xHorse = float(input())
+    yHorse = float(input())
 
-id_dead = max(data_dead, key=lambda item: item['number_of_deaths'])
+print('Введите местоположение точки на доске:')
+xPoint = float(input())
+yPoint = float(input())
+while xPoint < 0 or xPoint > 0.8 or yPoint < 0 or yPoint > 0.8:
+    print('Клетки с такой координатой не существует. \nВведите местоположение точки на доске:')
+    xPoint = float(input())
+    yPoint = float(input())
 
-result = list(filter(lambda x: x["season"] == str(id_dead["season"]) and
-                     x["episode"] == str(id_dead["episode"]), data_episode))
+xHorse = int(xHorse * 10)
+yHorse = int(yHorse * 10)
+xPoint = int(xPoint * 10)
+yPoint = int(yPoint * 10)
 
-result_all = {'ID эпизода': result[0]['episode_id'],
-              'Номер сезона': id_dead["season"],
-              'Номер эпизода': id_dead["episode"],
-              'Общее кол-во смертей': id_dead["number_of_deaths"],
-              'Список погибших': id_dead["death"]}
+print('Конь в клетке (' + str(xHorse) + ', ' + str(yHorse) +
+      '). Точка в клетке (' + str(xPoint) + ', ' + str(yPoint) + ').')
 
-for key, val in result_all.items():
-    print(f'{key}: {val}')
+xDifference = abs(xHorse - xPoint)
+yDifference = abs(yHorse - yPoint)
 
-with open('file_episode.json', 'w', encoding='utf-8') as file:
-    json.dump(result_all, file, ensure_ascii=False, indent=4)
+if xDifference - yDifference == 1 or xDifference - yDifference == -1:
+    print('Да, конь может ходить в эту клетку.')
+else:
+    print('Нет, конь не может ходить в эту клетку.')
