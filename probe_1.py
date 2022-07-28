@@ -17,6 +17,8 @@ def send_welcome(message):
 def send_good(message):
     markup = types.ReplyKeyboardRemove()
     bot.send_message(message.chat.id, 'Ну и отлично!', reply_markup=markup)
+    markup = types.ForceReply()
+    bot.send_message(message.chat.id, 'Расскажи, почему)):', reply_markup=markup)
 
 
 @bot.message_handler(regexp='Плохо')
@@ -27,7 +29,8 @@ def send_bad(message):
 
 @bot.message_handler(func=lambda m: True)
 def echo_all(message):
-    bot.reply_to(message, message.text)
+    # bot.reply_to(message, message.text)
+    bot.reply_to(message, 'Всё понятно)')
 
 
 bot.polling(interval=1)

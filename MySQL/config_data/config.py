@@ -7,3 +7,4 @@ else:
     load_dotenv()
 
 PASSWORD = os.getenv('PASSWORD_DB')
+USER = os.getenv('USER')
