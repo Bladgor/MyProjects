@@ -7,7 +7,7 @@ try:
         host="remotemysql.com",
         user=config.USER,
         password=config.PASSWORD,
-        database='shop'
+        database='7z5r4sXnHW'
     ) as connection:
         select_movies_query = "SELECT * FROM good LIMIT 5"
         with connection.cursor() as cursor:
