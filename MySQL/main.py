@@ -1,4 +1,4 @@
-from mysql.connector import connect, Error
+from mysql.connector import Error, connect
 from config_data import config
 
 
