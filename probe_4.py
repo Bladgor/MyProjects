@@ -1,17 +1,33 @@
-from random import randint
-import datetime as dt
 
 
-def random_num(my_list):
-    num = randint(1, 45)
-    if num in my_list:
-        num = random_num(my_list)
-    return num
+class Man:
+    def __init__(self, name):
+        self._name = name
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
 
 
-num_list = []
-for _ in range(6):
-    num_list.append(random_num(num_list))
+class Pet:
+    def __init__(self, name, owner):
+        self.name = name
+        self.owner = owner
 
-print(num_list)
-print(dt.datetime.now())
+    def __str__(self):
+        return self.name
+
+
+man = Man('Max')
+pet = Pet('Crocker', man)
+
+man.name = 'Alex'
+print(man)
+print(pet)
