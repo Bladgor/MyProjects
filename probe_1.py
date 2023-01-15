@@ -1,36 +1,38 @@
-import telebot
-from telebot import types
+import requests
+import json
+from pprint import pprint
 
-bot = telebot.TeleBot('5562447993:AAHxkSOD7HsgYawjsfb_wSRI-e9li_xhE6s')
+# url = "https://hotels4.p.rapidapi.com/properties/list"
+#
+# querystring = {"destinationId": "549499", "pageNumber": "2", "pageSize": "25", "checkIn": "2022-12-14",
+#                "checkOut": "2022-12-16", "adults1": "1", "sortOrder": "PRICE", "locale": "ru_RU", "currency": "RUB"}
+#
+# headers = {
+#     "X-RapidAPI-Key": "9adf9fc99fmsh6713e606247ad93p17623ejsn60318b0a84af",
+#     "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
+# }
+#
+# response = requests.request("GET", url, headers=headers, params=querystring)
+#
+# print(response.encoding)
+# data = json.loads(response.text)
+#
+# with open('hotel.json', 'w') as f:
+#     json.dump(data, f, indent=4)
 
+with open('hotel.json', 'r') as file:
+    data = json.load(file)
+    print(type(data))
+    print(data['data']['body']['searchResults']['results'][0]['ratePlan']['price']['exactCurrent'])
 
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    item_button_good = types.KeyboardButton('Хорошо')
-    item_button_bad = types.KeyboardButton('Плохо')
-    markup = types.ReplyKeyboardMarkup()
-    markup.row(item_button_good, item_button_bad)
-    bot.send_message(message.chat.id, 'Привет! Как дела?', reply_markup=markup)
+list_price = []
+hotels_dict = dict()
+data_price = data['data']['body']['searchResults']['results']
 
+for elem in data_price:
+    list_price.append(elem['ratePlan']['price']['exactCurrent'])
 
-@bot.message_handler(regexp='Хорошо')
-def send_good(message):
-    markup = types.ReplyKeyboardRemove()
-    bot.send_message(message.chat.id, 'Ну и отлично!', reply_markup=markup)
-    markup = types.ForceReply()
-    bot.send_message(message.chat.id, 'Расскажи, почему)):', reply_markup=markup)
+print(list_price)
+print(len(list_price))
 
-
-@bot.message_handler(regexp='Плохо')
-def send_bad(message):
-    markup = types.ReplyKeyboardRemove()
-    bot.send_message(message.chat.id, 'Плохо, когда плохо(((', reply_markup=markup)
-
-
-@bot.message_handler(func=lambda m: True)
-def echo_all(message):
-    # bot.reply_to(message, message.text)
-    bot.reply_to(message, 'Всё понятно)')
-
-
-bot.polling(interval=1)
+# TODO сделать словарь вместо list_price

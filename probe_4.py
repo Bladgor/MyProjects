@@ -1,33 +1,14 @@
 
-
-class Man:
-    def __init__(self, name):
-        self._name = name
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        self._name = name
+from dataclasses import dataclass
 
 
-class Pet:
-    def __init__(self, name, owner):
-        self.name = name
-        self.owner = owner
-
-    def __str__(self):
-        return self.name
+@dataclass
+class Card:
+    rank: str
+    suit: str
 
 
-man = Man('Max')
-pet = Pet('Crocker', man)
+card = Card("Q", "hearts")
 
-man.name = 'Alex'
-print(man)
-print(pet)
+print(card)
+print(card)
