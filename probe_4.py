@@ -1,14 +1,2 @@
-
-from dataclasses import dataclass
-
-
-@dataclass
-class Card:
-    rank: str
-    suit: str
-
-
-card = Card("Q", "hearts")
-
-print(card)
-print(card)
+alphabet = [chr(i) for i in range(65, 91)]
+print(alphabet)

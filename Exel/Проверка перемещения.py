@@ -21,6 +21,7 @@ def check_value(key, value, check_dict, error_dict):
 
 
 # Load in the workbook
+# Загружаем файл
 wb = load_workbook('file_1.xlsx')
 ws = wb['Лист1']  # В каком листе проверяем
 my_dict = dict()  # Словарь со всеми значениями из какой ячейки в какую переместили
@@ -29,7 +30,7 @@ dict_one = dict()
 
 current_cell = (ws['A1']).value  # Значение первой ячейки
 index = 1
-while current_cell is not None:  # Пока ячейка не пуста
+while current_cell:  # Пока ячейка не пуста ##  раньше ещё было "is not None"
     if current_cell in my_dict:  # Если ячейка есть в словаре
         if (ws[f'B{index}']).value not in my_dict[current_cell]:  # Если в значении (списке) нет
             my_dict[current_cell].append((ws[f'B{index}']).value)  # то добавляем

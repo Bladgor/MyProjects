@@ -1,33 +1,22 @@
-# Даны две различные клетки шахматной доски.
-# Напишите программу,  которая определяет, может ли ферзь попасть с первой клетки на вторую одним ходом.
-# Программа получает на вход четыре числа от 1 до 8 каждое,
-# задающие номер столбца и номер строки сначала для первой клетки, потом для второй клетки.
-# Программа должна вывести «YES», если из первой клетки ходом ферзя можно попасть во вторую или «NO» в противном случае.
+# Напишите программу, которая принимает имя файла и выводит его расширение.
+# Если расширение у файла определить невозможно, выбросите исключение.
 
-# Формат входных данных
-# На вход программе подаётся четыре числа от 1 до 8.
+file_name = '.filetxtru'
+elem = ''
+index = 0
 
-# Формат выходных данных
-# Программа должна вывести текст в соответствии с условием задачи.
-
-# Примечание. Шахматный ферзь ходит по диагонали, горизонтали или вертикали.
-
-# Sample Input:
-# 1
-# 1
-# 2
-# 2
-# Sample Output:
-# YES
-
-def queens_move(list_of_cells):
-    queen_x, queen_y = list_of_cells[0], list_of_cells[1]
-    point_x, point_y = list_of_cells[2], list_of_cells[3]
-    if queen_x - queen_y == point_x - point_y or queen_x - point_x == 0 or queen_y - point_y == 0:
-        return 'YES'
-    return 'NO'
+try:
+    if '.' in file_name:
+        while elem != '.':
+            index -= 1
+            elem = file_name[index]
+        if len(file_name) != len(file_name[index::]):
+            print('Расширение файла:', file_name[index::])
+        else:
+            raise ValueError
+    else:
+        raise ValueError
+except ValueError:
+    print(f'Ошибка ValueError. Файл не имеет расширения.')
 
 
-cells = list(map(int, input('Введите через пробел координаты клеток: ').split()))
-
-print(queens_move(cells))
