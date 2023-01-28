@@ -25,29 +25,34 @@ while party_cell:
     if party_cell in dict_party:
         dict_party[party_cell]['quantity'] += 1
         dict_party[party_cell]['total'] += q_cell
-        if dict_party[party_cell]['cell_addresses']['cell_address_cell']['cell']:
-            if dict_party[party_cell]['cell_addresses']['cell_address_cell']['cell'] == cell_address_cell:
+        try:
+            if cell_address_cell in dict_party[party_cell]['cell_addresses']['cell_address_cell']:
                 dict_party[party_cell]['cell_addresses']['cell_address_cell'] \
                     [f"{cell_address_cell}_{dict_party[party_cell]['quantity']}"] = {'cell': cell_address_cell,
                                                                                      'quant_in_cell': q_cell,
                                                                                      'product': product_cell,
                                                                                      'description': description_cell
                                                                                      }
-        else:
-            dict_party[party_cell]['cell_addresses']['cell_address_cell'] = {'cell': cell_address_cell,
-                                                                             'quant_in_cell': q_cell,
-                                                                             'product': product_cell,
-                                                                             'description': description_cell
-                                                                             }
+            else:
+                dict_party[party_cell]['cell_addresses']['cell_address_cell'][cell_address_cell] = {
+                    'quant_in_cell': q_cell,
+                    'cell': cell_address_cell,
+                    'product': product_cell,
+                    'description': description_cell
+                     }
+        except KeyError as ex:
+            print('Ошибка:', ex)
         # dict_party[party_cell]['cell_addresses'][cell_address_cell] = q_cell
     else:
         dict_party[party_cell] = {
             'quantity': 1,
             'total': q_cell,
-            'cell_addresses': {'cell_address_cell': {'quant_in_cell': q_cell,
+            'cell_addresses': {'cell_address_cell': {cell_address_cell: {
+                                                     'quant_in_cell': q_cell,
+                                                     'cell': cell_address_cell,
                                                      'product': product_cell,
                                                      'description': description_cell
-                                                     }}
+                                                     }}}
         }
     index += 1
     party_cell = (ws[f'{party_column}{index}']).value
@@ -61,7 +66,7 @@ pprint(dict_party['FB-000004675824248'])
 
 wb.create_sheet('Лист1', 0)
 ws_1 = wb['Лист1']
-max_total = 335
+max_total = 50
 
 print(wb.active)
 
@@ -79,13 +84,13 @@ for elem in dict_party:
         q_cell = (ws_1[f'D{index_new}'])
         party_cell = (ws_1[f'E{index_new}'])
 
-        for addresses in dict_party[elem]['cell_addresses']:
-            cell_address_cell.value = dict_party[elem]['cell_addresses'][addresses]['cell']
-            q_cell.value = dict_party[elem]['cell_addresses'][addresses]['quant_in_cell']
-            product_cell.value = dict_party[elem]['cell_addresses'][addresses]['product']
-            description_cell.value = dict_party[elem]['cell_addresses'][addresses]['description']
+        for addresses in dict_party[elem]['cell_addresses']['cell_address_cell']:
+            cell_address_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['cell']
+            q_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['quant_in_cell']
+            product_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['product']
+            description_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['description']
             party_cell.value = elem
-            if len(dict_party[elem]['cell_addresses']) > 1:
+            if len(dict_party[elem]['cell_addresses']['cell_address_cell']) > 1:
                 index_new += 1
                 cell_address_cell = (ws_1[f'A{index_new}'])
                 product_cell = (ws_1[f'B{index_new}'])
