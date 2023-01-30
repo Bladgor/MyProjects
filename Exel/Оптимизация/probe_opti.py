@@ -1,6 +1,18 @@
 from openpyxl import load_workbook
-from search_column import search_column
-from pprint import pprint
+
+wb = load_workbook('GoodsItem.xlsx')
+ws = wb['Лист2']
+
+current_cell = ws['A2'].value
+index = 2
+quant_mono_dict = dict()
+
+while current_cell:
+    quant_mono_dict[current_cell] = ws[f'D{index}'].value
+    index += 1
+    current_cell = ws[f'A{index}'].value
+
+print(quant_mono_dict)
 
 quant_mono_dict = {'100191': 480, '112267': 480, '127350': 480, '132157': 480, '100194': 288, '100544': 168,
                    '100545': 552, '102164': 33, '102182': 33, '103694': 3360, '103915': 624, '103916': 5280,
@@ -147,109 +159,3 @@ quant_mono_dict = {'100191': 480, '112267': 480, '127350': 480, '132157': 480, '
                    '132720': 480, '132721': 960, '132722': 576, '132723': 0, '132785': 1680, '132850': 0, '132851': 0,
                    '132854': 300, '132855': 0, '132856': 0, '132858': 0, '132957': 480, '132958': 384, '132959': 480,
                    '132950': 720, '132917': 1680, '132955': 720, '132956': 576}
-
-
-def no_mono(quant, product, quant_mono):
-    if product in quant_mono:
-        if quant_mono[product] == quant:
-            return False
-    return True
-
-
-wb = load_workbook('Registers.RegistersBrw.xlsx')  # Загружаем файл
-ws = wb['List1']  # В каком листе проверяем
-
-party_column = search_column(ws, 'Партия')
-q_column = search_column(ws, 'Q общ. баз.')
-cell_address_column = search_column(ws, 'Адрес ячейки')
-product_column = search_column(ws, 'Продукт')
-description_column = search_column(ws, 'Наименование')
-
-dict_party = dict()  # Здесь будут все партии с их количеством
-
-index = 5
-
-party_cell = (ws[f'{party_column}{index}']).value
-q_cell = (ws[f'{q_column}{index}']).value
-cell_address_cell = (ws[f'{cell_address_column}{index}']).value
-product_cell = (ws[f'{product_column}{index}']).value
-description_cell = (ws[f'{description_column}{index}']).value
-
-while party_cell:
-    if party_cell in dict_party:
-        if no_mono(q_cell, product_cell, quant_mono_dict):
-            dict_party[party_cell]['quantity'] += 1
-            dict_party[party_cell]['total'] += q_cell
-            if cell_address_cell in dict_party[party_cell]['cell_addresses']['cell_address_cell']:
-                dict_party[party_cell]['cell_addresses']['cell_address_cell'] \
-                    [f"{cell_address_cell}_{dict_party[party_cell]['quantity']}"] = {'cell': cell_address_cell,
-                                                                                     'quant_in_cell': q_cell,
-                                                                                     'product': product_cell,
-                                                                                     'description': description_cell
-                                                                                     }
-            else:
-                dict_party[party_cell]['cell_addresses']['cell_address_cell'][cell_address_cell] = {
-                    'quant_in_cell': q_cell,
-                    'cell': cell_address_cell,
-                    'product': product_cell,
-                    'description': description_cell
-                     }
-    else:
-        if no_mono(q_cell, product_cell, quant_mono_dict):
-            dict_party[party_cell] = {
-                'quantity': 1,
-                'total': q_cell,
-                'cell_addresses': {'cell_address_cell': {cell_address_cell: {
-                                                         'quant_in_cell': q_cell,
-                                                         'cell': cell_address_cell,
-                                                         'product': product_cell,
-                                                         'description': description_cell
-                                                         }}}
-            }
-    index += 1
-    party_cell = (ws[f'{party_column}{index}']).value
-    q_cell = (ws[f'{q_column}{index}']).value
-    cell_address_cell = (ws[f'{cell_address_column}{index}']).value
-    product_cell = (ws[f'{product_column}{index}']).value
-    description_cell = (ws[f'{description_column}{index}']).value
-
-# pprint(dict_party)
-pprint(dict_party['FB-000004675824248'])
-
-wb.create_sheet('Лист1', 0)
-ws_1 = wb['Лист1']
-max_total = 150
-
-print(wb.active)
-
-index_new = 1
-for elem in dict_party:
-    quantity = dict_party[elem]['quantity']
-    total = dict_party[elem]['total']
-
-    if quantity > 1 and total <= max_total:
-        print(index_new)
-
-        cell_address_cell = (ws_1[f'A{index_new}'])
-        product_cell = (ws_1[f'B{index_new}'])
-        description_cell = (ws_1[f'C{index_new}'])
-        q_cell = (ws_1[f'D{index_new}'])
-        party_cell = (ws_1[f'E{index_new}'])
-
-        for addresses in dict_party[elem]['cell_addresses']['cell_address_cell']:
-            cell_address_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['cell']
-            q_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['quant_in_cell']
-            product_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['product']
-            description_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['description']
-            party_cell.value = elem
-            if len(dict_party[elem]['cell_addresses']['cell_address_cell']) > 1:
-                index_new += 1
-                cell_address_cell = (ws_1[f'A{index_new}'])
-                product_cell = (ws_1[f'B{index_new}'])
-                description_cell = (ws_1[f'C{index_new}'])
-                q_cell = (ws_1[f'D{index_new}'])
-                party_cell = (ws_1[f'E{index_new}'])
-        index_new += 1
-
-print(index_new)
-wb.save('file.xlsx')
