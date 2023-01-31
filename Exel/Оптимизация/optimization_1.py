@@ -164,6 +164,8 @@ q_column = search_column(ws, 'Q общ. баз.')
 cell_address_column = search_column(ws, 'Адрес ячейки')
 product_column = search_column(ws, 'Продукт')
 description_column = search_column(ws, 'Наименование')
+gtd_column = search_column(ws, 'ГТД')
+certificate_column = search_column(ws, 'Сертификат')
 
 dict_party = dict()  # Здесь будут все партии с их количеством
 
@@ -174,10 +176,13 @@ q_cell = (ws[f'{q_column}{index}']).value
 cell_address_cell = (ws[f'{cell_address_column}{index}']).value
 product_cell = (ws[f'{product_column}{index}']).value
 description_cell = (ws[f'{description_column}{index}']).value
+gtd_cell = (ws[f'{gtd_column}{index}']).value
+certificate_cell = (ws[f'{certificate_column}{index}']).value
 
 while party_cell:
     if party_cell in dict_party:
         if no_mono(q_cell, product_cell, quant_mono_dict):
+            dict_party[party_cell]['product_set'].add(product_cell)
             dict_party[party_cell]['quantity'] += 1
             dict_party[party_cell]['total'] += q_cell
             if cell_address_cell in dict_party[party_cell]['cell_addresses']['cell_address_cell']:
@@ -185,25 +190,32 @@ while party_cell:
                     [f"{cell_address_cell}_{dict_party[party_cell]['quantity']}"] = {'cell': cell_address_cell,
                                                                                      'quant_in_cell': q_cell,
                                                                                      'product': product_cell,
-                                                                                     'description': description_cell
+                                                                                     'description': description_cell,
+                                                                                     'GTD': gtd_cell,
+                                                                                     'certificate': certificate_cell
                                                                                      }
             else:
                 dict_party[party_cell]['cell_addresses']['cell_address_cell'][cell_address_cell] = {
                     'quant_in_cell': q_cell,
                     'cell': cell_address_cell,
                     'product': product_cell,
-                    'description': description_cell
+                    'description': description_cell,
+                    'GTD': gtd_cell,
+                    'certificate': certificate_cell
                      }
     else:
         if no_mono(q_cell, product_cell, quant_mono_dict):
             dict_party[party_cell] = {
+                'product_set': {product_cell},
                 'quantity': 1,
                 'total': q_cell,
                 'cell_addresses': {'cell_address_cell': {cell_address_cell: {
                                                          'quant_in_cell': q_cell,
                                                          'cell': cell_address_cell,
                                                          'product': product_cell,
-                                                         'description': description_cell
+                                                         'description': description_cell,
+                                                         'GTD': gtd_cell,
+                                                         'certificate': certificate_cell
                                                          }}}
             }
     index += 1
@@ -212,17 +224,27 @@ while party_cell:
     cell_address_cell = (ws[f'{cell_address_column}{index}']).value
     product_cell = (ws[f'{product_column}{index}']).value
     description_cell = (ws[f'{description_column}{index}']).value
+    gtd_cell = (ws[f'{gtd_column}{index}']).value
+    certificate_cell = (ws[f'{certificate_column}{index}']).value
 
 # pprint(dict_party)
-pprint(dict_party['FB-000004675824248'])
+pprint(dict_party['FB-000004423065248'])
 
 wb.create_sheet('Лист1', 0)
 ws_1 = wb['Лист1']
-max_total = 150
+max_total = 200
 
 print(wb.active)
 
-index_new = 1
+ws_1['A1'] = 'Адрес ячейки'
+ws_1['B1'] = 'Продукт'
+ws_1['C1'] = 'Наименование'
+ws_1['D1'] = 'Q общ. баз.'
+ws_1['E1'] = 'Партия'
+ws_1['F1'] = 'ГТД'
+ws_1['G1'] = 'Сертификат'
+
+index_new = 2
 for elem in dict_party:
     quantity = dict_party[elem]['quantity']
     total = dict_party[elem]['total']
@@ -235,12 +257,16 @@ for elem in dict_party:
         description_cell = (ws_1[f'C{index_new}'])
         q_cell = (ws_1[f'D{index_new}'])
         party_cell = (ws_1[f'E{index_new}'])
+        gtd_cell = (ws_1[f'F{index_new}'])
+        certificate_cell = (ws_1[f'G{index_new}'])
 
         for addresses in dict_party[elem]['cell_addresses']['cell_address_cell']:
             cell_address_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['cell']
             q_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['quant_in_cell']
             product_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['product']
             description_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['description']
+            gtd_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['GTD']
+            certificate_cell.value = dict_party[elem]['cell_addresses']['cell_address_cell'][addresses]['certificate']
             party_cell.value = elem
             if len(dict_party[elem]['cell_addresses']['cell_address_cell']) > 1:
                 index_new += 1
@@ -249,7 +275,9 @@ for elem in dict_party:
                 description_cell = (ws_1[f'C{index_new}'])
                 q_cell = (ws_1[f'D{index_new}'])
                 party_cell = (ws_1[f'E{index_new}'])
-        index_new += 1
+                gtd_cell = (ws_1[f'F{index_new}'])
+                certificate_cell = (ws_1[f'G{index_new}'])
+        # index_new += 1
 
 print(index_new)
 wb.save('file.xlsx')
