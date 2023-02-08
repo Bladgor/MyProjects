@@ -193,7 +193,7 @@ def main():
     certificate_cell = (ws[f'{certificate_column}{index}']).value
 
     while party_cell:
-        if q_cell <= max_in_cell:
+        if 0 < q_cell <= max_in_cell:
             if party_cell in dict_party:
                 if no_mono(q_cell, product_cell, quant_mono_dict):
                     dict_party[party_cell]['product_set'].add(product_cell)
