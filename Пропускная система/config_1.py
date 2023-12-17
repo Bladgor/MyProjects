@@ -9,10 +9,6 @@ else:
 API_KEY = os.getenv('API_KEY')
 terminal_name = 'terminal1'
 url = f'https://pass.mosgt.ru/api/test.php?api_key={API_KEY}&terminal={terminal_name}'
-
+# url = f'https://yandex.ru/search/?text=некоторые+строки+другим+цветом+в+таблице+pysimplegui&lr=214019'
 timeout = 1000
 font_size = 16
-
-length_col_1 = 50
-length_col_2 = 50
-length_col_3 = 20

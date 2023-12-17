@@ -1,5 +1,6 @@
 from openpyxl import load_workbook
 from search_column import search_column
+from typing import Dict
 
 quant_mono_dict = {'100191': 480, '112267': 480, '127350': 480, '132157': 480, '100194': 288, '100544': 168,
                    '100545': 552, '102164': 33, '102182': 33, '103694': 3360, '103915': 624, '103916': 5280,
@@ -148,7 +149,7 @@ quant_mono_dict = {'100191': 480, '112267': 480, '127350': 480, '132157': 480, '
                    '132950': 720, '132917': 1680, '132955': 720, '132956': 576}
 
 
-def no_mono(quant, product, quant_mono):
+def no_mono(quant: int, product: str, quant_mono: Dict) -> bool:
     if product in quant_mono:
         if quant_mono[product] == quant:
             return False
@@ -158,13 +159,15 @@ def no_mono(quant, product, quant_mono):
 def main():
     while True:
         try:
-            wb = load_workbook('Registers.RegistersBrw.xlsx')  # Загружаем файл
+            wb = load_workbook('../Registers.RegistersBrw.xlsx')  # Загружаем файл
             break
         except FileNotFoundError:
             input('\nФайл "Registers.RegistersBrw.xlsx" не найден. '
                   'Поместите файл в одну папку с программой и нажмите Enter.')
 
     ws = wb['List1']  # В каком листе проверяем
+    print(type(ws))
+    print(ws)
 
     party_column = search_column(ws, 'Партия')
     q_column = search_column(ws, 'Q общ. баз.')
@@ -173,6 +176,12 @@ def main():
     description_column = search_column(ws, 'Наименование')
     gtd_column = search_column(ws, 'ГТД')
     certificate_column = search_column(ws, 'Сертификат')
+    while True:
+        try:
+            max_in_cell = int(input('Введите максимальное кол-во бутылок в ячейке: '))
+            break
+        except ValueError:
+            print('\nВведено неверное значение. Попробуйте ещё раз. ')
 
     dict_party = dict()  # Здесь будут все партии с их количеством
 
@@ -187,45 +196,46 @@ def main():
     certificate_cell = (ws[f'{certificate_column}{index}']).value
 
     while party_cell:
-        if party_cell in dict_party:
-            if no_mono(q_cell, product_cell, quant_mono_dict):
-                dict_party[party_cell]['product_set'].add(product_cell)
-                dict_party[party_cell]['quantity'] += 1
-                dict_party[party_cell]['total'] += q_cell
-                if cell_address_cell in dict_party[party_cell]['cell_addresses']['cell_address_cell']:
-                    dict_party[party_cell]['cell_addresses']['cell_address_cell'] \
-                        [f"{cell_address_cell}_{dict_party[party_cell]['quantity']}"] = {
-                                                                                        'cell': cell_address_cell,
-                                                                                        'quant_in_cell': q_cell,
-                                                                                        'product': product_cell,
-                                                                                        'description': description_cell,
-                                                                                        'GTD': gtd_cell,
-                                                                                        'certificate': certificate_cell
-                                                                                         }
-                else:
-                    dict_party[party_cell]['cell_addresses']['cell_address_cell'][cell_address_cell] = {
-                        'quant_in_cell': q_cell,
-                        'cell': cell_address_cell,
-                        'product': product_cell,
-                        'description': description_cell,
-                        'GTD': gtd_cell,
-                        'certificate': certificate_cell
+        if 0 < q_cell <= max_in_cell:
+            if party_cell in dict_party:
+                if no_mono(q_cell, product_cell, quant_mono_dict):
+                    dict_party[party_cell]['product_set'].add(product_cell)
+                    dict_party[party_cell]['quantity'] += 1
+                    dict_party[party_cell]['total'] += q_cell
+                    if cell_address_cell in dict_party[party_cell]['cell_addresses']['cell_address_cell']:
+                        dict_party[party_cell]['cell_addresses']['cell_address_cell'] \
+                            [f"{cell_address_cell}_{dict_party[party_cell]['quantity']}"] = {
+                                                                                            'cell': cell_address_cell,
+                                                                                            'quant_in_cell': q_cell,
+                                                                                            'product': product_cell,
+                                                                                            'description': description_cell,
+                                                                                            'GTD': gtd_cell,
+                                                                                            'certificate': certificate_cell
+                                                                                             }
+                    else:
+                        dict_party[party_cell]['cell_addresses']['cell_address_cell'][cell_address_cell] = {
+                            'quant_in_cell': q_cell,
+                            'cell': cell_address_cell,
+                            'product': product_cell,
+                            'description': description_cell,
+                            'GTD': gtd_cell,
+                            'certificate': certificate_cell
+                        }
+            else:
+                if no_mono(q_cell, product_cell, quant_mono_dict):
+                    dict_party[party_cell] = {
+                        'product_set': {product_cell},
+                        'quantity': 1,
+                        'total': q_cell,
+                        'cell_addresses': {'cell_address_cell': {cell_address_cell: {
+                            'quant_in_cell': q_cell,
+                            'cell': cell_address_cell,
+                            'product': product_cell,
+                            'description': description_cell,
+                            'GTD': gtd_cell,
+                            'certificate': certificate_cell
+                        }}}
                     }
-        else:
-            if no_mono(q_cell, product_cell, quant_mono_dict):
-                dict_party[party_cell] = {
-                    'product_set': {product_cell},
-                    'quantity': 1,
-                    'total': q_cell,
-                    'cell_addresses': {'cell_address_cell': {cell_address_cell: {
-                        'quant_in_cell': q_cell,
-                        'cell': cell_address_cell,
-                        'product': product_cell,
-                        'description': description_cell,
-                        'GTD': gtd_cell,
-                        'certificate': certificate_cell
-                    }}}
-                }
         index += 1
         party_cell = (ws[f'{party_column}{index}']).value
         q_cell = (ws[f'{q_column}{index}']).value

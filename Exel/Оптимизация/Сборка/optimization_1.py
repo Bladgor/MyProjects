@@ -1,4 +1,6 @@
 from openpyxl import load_workbook
+import PySimpleGUI as sg
+from typing import Dict
 from search_column import search_column
 
 quant_mono_dict = {'100191': 480, '112267': 480, '127350': 480, '132157': 480, '100194': 288, '100544': 168,
@@ -148,21 +150,23 @@ quant_mono_dict = {'100191': 480, '112267': 480, '127350': 480, '132157': 480, '
                    '132950': 720, '132917': 1680, '132955': 720, '132956': 576}
 
 
-def no_mono(quant, product, quant_mono):
+def no_mono(quant: int, product: str, quant_mono: Dict) -> bool:
     if product in quant_mono:
         if quant_mono[product] == quant:
             return False
     return True
 
 
-def main():
+def main(max_in_cell, max_total):
     while True:
         try:
             wb = load_workbook('Registers.RegistersBrw.xlsx')  # Загружаем файл
             break
         except FileNotFoundError:
-            input('\nФайл "Registers.RegistersBrw.xlsx" не найден. '
-                  'Поместите файл в одну папку с программой и нажмите Enter.')
+            sg.popup('Файл "Registers.RegistersBrw.xlsx" не найден. '
+                     'Поместите файл в одну папку с программой и нажмите "Подтвердить".',
+                     title='Ошибка',
+                     custom_text='Подтвердить')
 
     ws = wb['List1']  # В каком листе проверяем
 
@@ -173,12 +177,6 @@ def main():
     description_column = search_column(ws, 'Наименование')
     gtd_column = search_column(ws, 'ГТД')
     certificate_column = search_column(ws, 'Сертификат')
-    while True:
-        try:
-            max_in_cell = int(input('Введите максимальное кол-во бутылок в ячейке: '))
-            break
-        except ValueError:
-            print('\nВведено неверное значение. Попробуйте ещё раз. ')
 
     dict_party = dict()  # Здесь будут все партии с их количеством
 
@@ -244,12 +242,7 @@ def main():
 
     wb.create_sheet('Лист1', 0)
     ws_1 = wb['Лист1']
-    while True:
-        try:
-            max_total = int(input('Введите максимальное кол-во бутылок после объединения: '))
-            break
-        except ValueError:
-            print('\nВведено неверное значение. Попробуйте ещё раз. ')
+
     # max_total = 200
 
     ws_1['A1'] = 'Адрес ячейки'
@@ -301,13 +294,8 @@ def main():
     while True:
         try:
             wb.save('Оптимизация.xlsx')
-            print('\nПрограмма завершенна. Данные сохранены в файл "Оптимизация.xlsx".')
-            input('Для выхода нажмите Enter или просто закройте окно крестиком)))')
             break
         except PermissionError:
-            input('\nОшибка при сохранении. '
-                  'Закройте файл "Оптимизация.xlsx" и нажмите Enter.')
-
-
-if __name__ == '__main__':
-    main()
+            sg.popup('Ошибка при сохранении. Закройте файл "Оптимизация.xlsx" и нажмите "Подтвердить".',
+                     title='Ошибка',
+                     custom_text='Подтвердить')

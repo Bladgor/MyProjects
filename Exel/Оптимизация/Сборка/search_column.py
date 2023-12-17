@@ -1,6 +1,6 @@
 
 
-def search_column(sheet, name):
+def search_column(sheet, name: str) -> str:
     """
     Функция возвращает имя столбца, содержащего колонку "name"
     """
